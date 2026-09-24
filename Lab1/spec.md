@@ -33,7 +33,7 @@
 * movespeed (number) — швидкість руху.
 * damage (number) - показник шкоди яку наносить ворог.
 * type (string) — тип ворога.
-* describe_enemy (string) — опис ворога f,j лор.
+* describe_enemy (string) — опис ворога або лор.
 
 **5. Bestiary** 
 * id (UUID) - унікальний ідентифікатор типу ворога (PK).
