@@ -47,4 +47,4 @@ erDiagram
     GAME_SESSION }o--o{ ENEMY : "spawns"
     PLAYER ||--o{ BESTIARY : "tracks_kills"
     ENEMY ||--o{ BESTIARY : "references"
-    
+````
