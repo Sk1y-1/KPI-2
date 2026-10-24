@@ -8,7 +8,7 @@ Feature: Завершити забіг (UC-3)
   Background:
     Given триває забіг гравця
 
-  @REQ-06 @REQ-07
+  @REQ-01 @REQ-02
   Scenario Outline: Завершення забігу з різних причин
     When забіг завершується через "<причина>"
     Then в Game_Session записано end, earned_experience і waves_survived
@@ -20,7 +20,7 @@ Feature: Завершити забіг (UC-3)
       | ручний вихід                |
       | проходження останньої хвилі |
 
-  @REQ-08 @REQ-17
+  @REQ-03 @REQ-04 @REQ-05
   Scenario: Оновлення бестіарію та підсумок забігу
     Given у забігу вбито 5 ворогів типу "Goblin" і 3 типу "Bat"
     And у Bestiary немає запису для "Goblin"
@@ -30,7 +30,7 @@ Feature: Завершити забіг (UC-3)
     And для "Bat" counter дорівнює 13
     And гравець бачить підсумок із waves_survived, earned_experience і ворогом "Goblin" як новим у бестіарії
 
-  @REQ-18
+  @REQ-03 @REQ-06
   Scenario Outline: Розблокування навички за першого вбивства елітки або боса
     Given Enemy "<ворог>" має тип "<тип>" і з ним пов'язана Skill_Card "<картка>"
     And у Bestiary немає запису для "<ворог>"
@@ -42,8 +42,8 @@ Feature: Завершити забіг (UC-3)
       | ворог        | тип   | картка    |
       | Goblin Mage  | elite | Fireball  |
       | Goblin King  | boss  | Ice Shard |
- 
-  @REQ-18
+
+  @REQ-03 @REQ-06
   Scenario: Звичайний моб не розблоковує навичку
     Given Enemy "Goblin" має тип "normal"
     And у Bestiary немає запису для "Goblin"
@@ -51,7 +51,7 @@ Feature: Завершити забіг (UC-3)
     When забіг завершується
     Then жодна нова Skill_Card не стає доступною
 
-  @REQ-18
+  @REQ-03 @REQ-06
   Scenario: Повторне вбивство боса не розблоковує навичку вдруге
     Given Enemy "Goblin King" має тип "boss" і з ним пов'язана Skill_Card "Ice Shard"
     And у Bestiary є запис для "Goblin King" зі counter = 3
@@ -59,20 +59,20 @@ Feature: Завершити забіг (UC-3)
     When забіг завершується
     Then Skill_Card "Ice Shard" не додається вдруге
 
-  @REQ-09
+  @REQ-07
   Scenario: Помилка збереження результату
     Given запис у базу даних не вдається
     When забіг завершується
     Then результат поміщається в локальну чергу
     And запис повторюється при наступному запуску, не більше 3 спроб
 
-  @REQ-15
+  @REQ-09
   Scenario: Steam недоступний при хмарному збереженні
     Given хмарні збереження ввімкнені
     And Steam не відповідає протягом 5 секунд
     When забіг завершується
     Then прогрес лишається збереженим локально
     And синхронізація повторюється при наступному запуску
-
-```
+    
+    ```
 
