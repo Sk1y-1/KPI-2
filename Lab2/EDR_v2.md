@@ -14,6 +14,7 @@ erDiagram
         UUID player_id FK
         datetime start
         datetime end
+        string status "in_progress | completed | abandoned"
         number earned_experience
         number waves_survived
     }
