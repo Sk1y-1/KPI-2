@@ -1,5 +1,5 @@
 # Домен: одиночна 2D survivors-like гра. Модель даних із Lab1: Player, Game_Session, Skill_Card, Enemy, Bestiary.
-Супутні файли: EARS.md (функціональні та нефункціональні вимоги), UC_diagram.md (діаграма), audit.md (аудит), ADR/adr.md (рішення), trace_matrix.md (матриця трасування), DEFENSE.md (захист).
+Супутні файли: EARS.md (функціональні та нефункціональні вимоги), UC_diagram.md (діаграма), audit.md (аудит), ADR/adr.md (рішення), trace_matrix.md (матриця трасування).
 
 # Мета
 
