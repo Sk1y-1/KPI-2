@@ -1,28 +1,46 @@
-```mermaid 
+```mermaid
 sequenceDiagram
     actor P as Гравець
-    participant GS as GameSessionService
+    participant GL as GameLoop
+    participant RS as RunService
+    participant DB as DB (SQLite)
     participant S as Game_Session
+    participant PL as Player
     participant ST as Steam
-    participant Q as LocalQueue
-    P->>GS: finishRun(sessionId, reason)
-    activate GS
+    participant UI as UI
+    GL->>RS: finishRun(sessionId, reason, runStats)
+    activate RS
     par локальне збереження
-        GS->>S: saveResult(sessionId, ...)
+        RS->>DB: begin()
+        activate DB
+        RS->>S: closeSession(sessionId, endTime, earnedExperience, wavesSurvived, COMPLETED)
         activate S
-        S-->>GS: saved
+        S-->>RS: sessionClosed
         deactivate S
-    and хмарна синхронізація (UC-7, REQ-08)
-        GS->>ST: uploadProgress(playerId)
-        activate ST
-        alt Steam відповів за ≤ 5 с
-            ST-->>GS: ack
-        else Steam мовчить > 5 с
-            ST--xGS: timeout
-            GS->>Q: markForSyncRetry(playerId)
+        RS->>DB: commit()
+        deactivate DB
+    and хмарна синхронізація
+        RS->>PL: isCloudSyncEnabled(playerId)
+        activate PL
+        PL-->>RS: cloudSyncEnabled
+        opt cloudSyncEnabled = true
+            RS->>ST: uploadProgress(playerId)
+            activate ST
+            alt Steam відповів за 5 с або швидше
+                ST-->>RS: ack
+                RS->>PL: setCloudSyncPending(playerId, false)
+            else Steam не відповів за 5 с
+                RS-xST: cancel(timeout 5 с)
+                RS->>PL: setCloudSyncPending(playerId, true)
+            end
+            deactivate ST
         end
-        deactivate ST
+        deactivate PL
     end
-    GS-->>P: showSummary(..., cloudSynced)
-    deactivate GS
+    RS->>UI: showSummary(summary, cloudSynced)
+    activate UI
+    UI-->>P: підсумок, прогрес збережено локально
+    deactivate UI
+    RS-->>GL: runFinished(sessionId)
+    deactivate RS
 ```
