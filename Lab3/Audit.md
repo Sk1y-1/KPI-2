@@ -31,8 +31,9 @@
  
 ## Топ-3 розбіжності
  
-| # | Розбіжність | Де видно | Вимоги | Пропозиція | Статус |
-|---|---|---|---|---|---|
-| 1 | Зв'язок `Player M:N Skill_Card` (`has_unlocked`) у SQLite потребує сполучної таблиці, а в моделі її немає; без унікального ключа (`player_id`, `skill_card_id`) повторне розблокування (SC-5) нічим не заблоковане, крім перевірки `Bestiary` | SC-3, SC-4, SC-5: `Player.addUnlockedSkills` | REQ-06 | додати `PLAYER_SKILL_CARD (id, player_id, skill_card_id)` з UNIQUE (`player_id`, `skill_card_id`) | не виправлено в ER |
-| 2 | `Player.total_experience` похідне від `earned_experience` сесій (порушення 3NF, розбіжність 3 з Lab2). Через це `addExperience` мусить бути в тій самій транзакції, а повтор із черги (SC-6) мусить теж нараховувати досвід, чого REQ-02 і REQ-07 прямо не вимагають | SC-1, SC-6 | REQ-02, REQ-07, NFR-06 | у REQ-07 дописати нарахування досвіду при повторі; або обчислювати суму із `Game_Session` | діаграми узгоджено (досвід у транзакції повтору), вимоги й ER не виправлено |
-| 3 | `SaveQueue` і мітка `markForSyncRetry` не мають сутності: повтор «при наступному запуску» вимагає збереження між запусками, а черга в пам'яті зникає разом із процесом | SC-6, SC-7 | REQ-07, REQ-09 | таблиця `PENDING_SAVE (id, session_id FK, attempts, kind)` або `Game_Session.status = pending` і поле `cloud_sync_pending` | не виправлено в ER |
+| № | Розбіжність | Виправлення | Файли |
+| :--- | :--- | :--- | :--- |
+| 1 | Немає таблиці для `has_unlocked` | Нова сутність `PLAYER_SKILL_CARD` з `unlocked_at` і `UNIQUE (player_id, skill_card_id)`. У діаграмах SC-3, SC-4, SC-5 виклик став `insertIfAbsent`. `REQ-06` тепер вимагає кожну картку ворога й унікальний запис. | `ERD_v3.md`, `EARS_v2.md` |
+| 2 | `total_experience` порушує 3NF | `ard.md ` обґрунтовує це як кеш суми `earned_experience`. `REQ-02` вимагає оновлення в тій самій транзакції, зокрема при повторі з черги. | `ard.md`, `EARS_v2.md` |
+| 3 | `SaveQueue` без сутності | Нова таблиця `PENDING_SAVE` (з `killCounts` у `payload`). У `PLAYER` додано `cloud_sync_enabled` і `cloud_sync_pending`. | `ERD_v3.md`, `EARS_v2.md` |
+
