@@ -1,25 +1,36 @@
+
 ```mermaid
 sequenceDiagram
     actor P as Гравець
-    participant GS as GameSessionService
+    participant GL as GameLoop
+    participant RS as RunService
+    participant DB as DB (SQLite)
     participant S as Game_Session
     participant PL as Player
-    P->>GS: finishRun(sessionId, reason)
-    activate GS
-    alt reason = manual_exit
-        GS->>GS: resolveStatus(abandoned)
-    else reason = player_died або last_wave_cleared
-        GS->>GS: resolveStatus(completed)
+    activate GL
+    alt гравець загинув
+        GL->>GL: reason = PLAYER_DIED
+    else ручний вихід
+        P->>GL: exitRun()
+        GL->>GL: reason = MANUAL_EXIT
+    else остання хвиля пройдена
+        GL->>GL: reason = LAST_WAVE_CLEARED
     end
-    Note over GS,PL: один транзакційний блок (NFR-06)
-    GS->>S: saveResult(sessionId, end, earnedExperience, wavesSurvived, status)
+    GL->>RS: finishRun(sessionId, reason, runStats)
+    activate RS
+    RS->>DB: begin()
+    activate DB
+    RS->>S: closeSession(sessionId, endTime, earnedExperience, wavesSurvived, COMPLETED)
     activate S
-    S-->>GS: saved
+    S-->>RS: sessionClosed
     deactivate S
-    GS->>PL: addExperience(playerId, earnedExperience)
+    RS->>PL: addExperience(playerId, earnedExperience)
     activate PL
-    PL-->>GS: totalExperience
+    PL-->>RS: totalExperience
     deactivate PL
-    GS-->>P: runFinished(sessionId)
-    deactivate GS
+    RS->>DB: commit()
+    deactivate DB
+    RS-->>GL: runFinished(sessionId)
+    deactivate RS
+    deactivate GL
 ```
