@@ -1,29 +1,42 @@
 ```mermaid
 sequenceDiagram
     actor P as Гравець
-    participant GS as GameSessionService
+    participant GL as GameLoop
+    participant RS as RunService
+    participant KT as KillTracker
+    participant DB as DB (SQLite)
     participant B as Bestiary
-    P->>GS: finishRun(sessionId, reason)
-    activate GS
-    GS->>GS: collectKillCounts()
-    loop для кожного типу ворога з killCounts
-        GS->>B: findByPlayerAndEnemy(playerId, enemyId)
+    participant UI as UI
+    GL->>RS: finishRun(sessionId, reason, runStats)
+    activate RS
+    RS->>KT: getKillCounts(sessionId)
+    activate KT
+    KT-->>RS: killCounts (enemyId, kills)
+    deactivate KT
+    RS->>DB: begin()
+    activate DB
+    loop для кожного enemyId з killCounts
+        RS->>B: findByPlayerAndEnemy(playerId, enemyId)
         activate B
-        B-->>GS: entry або null
-        deactivate B
-        alt запису немає
-            GS->>B: create(playerId, enemyId, counter = kills)
-            activate B
-            B-->>GS: created
-            deactivate B
-        else запис є
-            GS->>B: incrementCounter(entryId, kills)
-            activate B
-            B-->>GS: updated
-            deactivate B
+        B-->>RS: entry або null
+        alt entry = null
+            RS->>B: create(playerId, enemyId, counter = kills)
+            B-->>RS: created
+            RS->>RS: newEnemies.add(enemyId)
+        else запис існує
+            RS->>B: incrementCounter(entryId, kills)
+            B-->>RS: updated
         end
+        deactivate B
     end
-    GS-->>P: showSummary(wavesSurvived, earnedExperience, newEnemies)
-    deactivate GS
+    Note right of B: Goblin: create, counter = 5. Bat: 10 + 3 = 13
+    RS->>DB: commit()
+    deactivate DB
+    RS->>UI: showSummary(wavesSurvived, earnedExperience, newEnemies)
+    activate UI
+    UI-->>P: підсумок забігу
+    deactivate UI
+    RS-->>GL: runFinished(sessionId)
+    deactivate RS
 ```
  
