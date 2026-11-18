@@ -68,3 +68,4 @@ erDiagram
     ENEMY ||--o{ BESTIARY : "references"
     ENEMY |o--o{ SKILL_CARD : "unlocks_card"
     GAME_SESSION ||--o| PENDING_SAVE : "queued_as"
+```
