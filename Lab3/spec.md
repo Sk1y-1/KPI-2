@@ -15,13 +15,13 @@
 
 | Сценарій | Gherkin | Діаграма | Фрагменти | REQ |
 |---|---|---|---|---|
-| SC-1 | Завершення з різних причин | [SC-1](diagrams/SC-1.md) | alt (три причини), activation GameLoop і RunService поза фрагментом | REQ-01, REQ-02 |
-| SC-2 | Оновлення бестіарію та підсумок | [SC-2](diagrams/SC-2.md) | loop + alt (create / increment) | REQ-03, REQ-04, REQ-05 |
-| SC-3 | Розблокування навички | [SC-3](diagrams/SC-3.md) | loop + opt + opt | REQ-03, REQ-06 |
-| SC-4 | Звичайний моб | [SC-4](diagrams/SC-4.md) | alt (elite/boss або normal) | REQ-03, REQ-06 |
-| SC-5 | Повторний бос | [SC-5](diagrams/SC-5.md) | alt (перше вбивство або запис існує) | REQ-03, REQ-06 |
-| SC-6 | Помилка збереження | [SC-6](diagrams/SC-6.md) | alt, loop (до 3 спроб), opt | REQ-07 |
-| SC-7 | Steam недоступний | [SC-7](diagrams/SC-7.md) | par + opt + alt | REQ-08, REQ-09 |
+| SC-1 | Завершення з різних причин | [SC-1](SC/SC-1%20reasons.md) | alt (три причини), activation GameLoop і RunService поза фрагментом | REQ-01, REQ-02 |
+| SC-2 | Оновлення бестіарію та підсумок | [SC-2](SC/SC-2%20bestiary.md) | loop + alt (create / increment) | REQ-03, REQ-04, REQ-05 |
+| SC-3 | Розблокування навички | [SC-3](SC/SC-3%20unlock.md) | loop + opt + opt | REQ-03, REQ-06 |
+| SC-4 | Звичайний моб | [SC-4](SC/SC-4%20normal%20mob.md) | alt (elite/boss або normal) | REQ-03, REQ-06 |
+| SC-5 | Повторний бос | [SC-5](SC/SC-5%20repeat%20boss.md) | alt (перше вбивство або запис існує) | REQ-03, REQ-06 |
+| SC-6 | Помилка збереження | [SC-6](SC/SC-6%20error.md) | alt, loop (до 3 спроб), opt | REQ-07 |
+| SC-7 | Steam недоступний | [SC-7](SC/SC-7%20steam.md) | par + opt + alt | REQ-08, REQ-09 |
 
 ## Учасники
 
