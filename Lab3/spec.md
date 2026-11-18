@@ -1,7 +1,7 @@
 # Домен: одиночна 2D survivors-like гра
 
 Модель даних: `ERD_v3.md` (Player, Game_Session, Skill_Card, Enemy, Bestiary, Player_Skill_Card, Pending_Save). Вимоги: `EARS_v2.md` (на основі `Lab2/EARS.md`). Сценарії: `Lab2/Gherkin.md`. Рішення: `ADR.md`.
-Супутні файли: `audit.md` (аудит діаграм), `DEFENSE.md` (захист), `diagrams/` (діаграми Mermaid у `.md`, які GitHub відображає сам, і запасний рендер `.png`).
+Супутні файли: `Audit.md` (аудит діаграм).
 
 ## Мета
 
